@@ -1,9 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { TimeService } from './../../services/time.service';
 import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { User } from 'src/app/models/User.model';
 import { LocalstorageService } from 'src/app/services/localstorage.service';
-import { Observable } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonicModule, CommonModule, FormsModule]
 })
 export class HomePage {
 
@@ -19,27 +20,22 @@ export class HomePage {
   userName = localStorage.getItem('userName');
   cheguei!: string;
   usuario = 'jailton.mendes@thera.com.br';
-  // hora: string = moment(new Date()).format("HH:mm");
+  dateTime!: Date;
 
-  now = new Date();
-  dateString = this.now.toISOString();
-
-
-  newDate = new Date();
-  formattedDate = this.newDate.toLocaleDateString('pt-BR');
-
-  hora = new Date();
-  formattedTime = this.hora.toLocaleTimeString('pt-BR');
-
+  dataInicio!: string;
+  horaInicio!: string;
+  horaAlmoco!: string;
+  horaVoltaAlmoco!: string;
+  horaFim!: string;
 
 
   constructor(private timeService: TimeService, private localStorageService:LocalstorageService) {
     // this.userName = JSON.stringify.localStorageService.getLocalStorage('userName');
     this.getTimes();
-    console.log('DD', this.dateString)
-    console.log('PT', this.formattedDate)
-    console.log('Hours', this.formattedTime)
-    // console.log('UserModel: ', this.user)
+
+    this.timeService.dateTime$.subscribe(dateTime => {
+      this.dateTime = dateTime
+    })
   }
 
 
@@ -64,7 +60,21 @@ export class HomePage {
 
 
   startTime() {
+    this.dataInicio = this.dateTime.toLocaleDateString("pt-br");
+    this.horaInicio = this.dateTime.toLocaleTimeString("pt-br", {timeZone: "America/Sao_Paulo"})
     console.log('chegueiiii')
+  }
+
+  startAlmoco() {
+    this.horaAlmoco = this.dateTime.toLocaleTimeString("pt-br", {timeZone: "America/Sao_Paulo"})
+  }
+
+  backAlmoco() {
+    this.horaVoltaAlmoco = this.dateTime.toLocaleTimeString("pt-br", {timeZone: "America/Sao_Paulo"})
+  }
+
+  hourEnd() {
+    this.horaFim = this.dateTime.toLocaleTimeString("pt-br", {timeZone: "America/Sao_Paulo"})
   }
 
 

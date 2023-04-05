@@ -8,6 +8,7 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 
 
@@ -22,7 +23,8 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(
       IonicModule.forRoot({}),
       HttpClientModule,
-      FormsModule),
+      FormsModule,
+      CommonModule),
     provideRouter(routes),
 
   ],

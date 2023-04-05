@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { environment } from 'src/environments/environment';
 import { Login } from '../models/login.model';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
+import { Observable, interval, catchError, map, tap, throwError } from 'rxjs';
 import { error } from 'console';
 import { User } from '../models/User.model';
 import { LocalstorageService } from './localstorage.service';
@@ -16,9 +16,16 @@ export class TimeService {
   urlApi = environment.apiUrl;
   accessToken = ''
 
+  dateTime$!: Observable<Date>;
+
   constructor(private http: HttpClient, private localStorage: LocalstorageService) {
     this.accessToken = JSON.stringify(this.localStorage.getLocalStorage('token'))
     // this.accessToken = this.localStorage.getLocalStorage('token')
+
+    this.dateTime$ = interval(1000).pipe(
+      map(() => new Date())
+    );
+
   }
 
 
