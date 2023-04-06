@@ -1,9 +1,13 @@
 <ion-header [translucent]="true">
-
   <ion-toolbar color="primary">
     <ion-row>
       <ion-col>
-        <img src="../../../assets/LogoThera.svg" alt="Logo Thera" srcset="" class="logo">
+        <img
+          src="../../../assets/LogoThera.svg"
+          alt="Logo Thera"
+          srcset=""
+          class="logo"
+        />
       </ion-col>
       <ion-col class="olaNome">
         <p>Olá, {{ userName }}!</p>
@@ -12,37 +16,40 @@
 
     <ion-buttons slot="end">
       <ion-button>
-        <img src="../../../assets/sair.svg" alt="Logo Thera" class="sair">
+        <img src="../../../assets/sair.svg" alt="Logo Thera" class="sair" />
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
-
   <div id="container">
     <ion-card class="card">
+      <div class="dateTime">
+        <h4>{{ dateTime | date: "dd/MM/yyyy HH:mm:ss" }}</h4>
+        <h5>{{ tempoFinall }}</h5>
+      </div>
 
-    <div class="dateTime">
-      <h4>{{ dateTime | date: "dd/MM/yyyy HH:mm:ss" }}</h4>
-      <h5>Tempo 07:17:47</h5>
-    </div>
-
-    <div class="acoes">
-      <ion-row>
-        <ion-col size="12">
-          <ion-button fill="clear" class="buttons" (click)="startTime()">CHEGUEI</ion-button>
-          <ion-button fill="clear" class="buttons" (click)="startAlmoco()">FUI ALMOÇAR</ion-button>
-        </ion-col>
-        <ion-col size="12">
-          <ion-button fill="clear" class="buttons" (click)="backAlmoco()">VOLTEI</ion-button>
-          <ion-button fill="clear" class="buttons" (click)="hourEnd()">FUI</ion-button>
-        </ion-col>
-      </ion-row>
-    </div>
-
+      <div class="acoes">
+        <ion-row>
+          <ion-col size="12">
+            <ion-button fill="clear" class="buttons" (click)="startTime()"
+              >CHEGUEI</ion-button
+            >
+            <ion-button fill="clear" class="buttons" (click)="startAlmoco()"
+              >FUI ALMOÇAR</ion-button
+            >
+          </ion-col>
+          <ion-col size="12">
+            <ion-button fill="clear" class="buttons" (click)="backAlmoco()"
+              >VOLTEI</ion-button
+            >
+            <ion-button fill="clear" class="buttons" (click)="hourEnd()"
+              >FUI</ion-button
+            >
+          </ion-col>
+        </ion-row>
+      </div>
     </ion-card>
 
     <ion-card class="cardTime">
@@ -75,14 +82,11 @@
         </ion-col>
         <ion-col>
           <p>TEMPO</p>
-          <ion-input></ion-input>
+          <ion-input [(ngModel)]="tempoFinal"></ion-input>
         </ion-col>
       </ion-row>
 
       <div class="divider"></div>
-
     </ion-card>
-
   </div>
-
 </ion-content>

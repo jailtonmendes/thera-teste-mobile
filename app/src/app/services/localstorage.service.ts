@@ -12,7 +12,7 @@ export class LocalstorageService {
   }
 
   getLocalStorage(name: string) {
-    return JSON.stringify(localStorage.getItem(name) || '{}')
+    return localStorage.getItem(name);
   }
 
   removeLocalStorage(name: string) {
