@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { LOCALE_ID, enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -24,7 +24,8 @@ bootstrapApplication(AppComponent, {
       IonicModule.forRoot({}),
       HttpClientModule,
       FormsModule,
-      CommonModule),
+      CommonModule
+      ),
     provideRouter(routes),
 
   ],

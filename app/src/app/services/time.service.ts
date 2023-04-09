@@ -7,6 +7,7 @@ import { error } from 'console';
 import { User } from '../models/User.model';
 import { LocalstorageService } from './localstorage.service';
 import { NewTime } from '../models/NewTime';
+import { Timesheet } from '../models/Timesheet';
 
 @Injectable({
   providedIn: 'root',
@@ -20,10 +21,9 @@ export class TimeService {
   constructor(
     private http: HttpClient,
     private localStorage: LocalstorageService
+
   ) {
     this.accessToken = this.localStorage.getLocalStorage('accessToken')!;
-    // this.accessToken = this.localStorage.getLocalStorage('token')
-
     this.dateTime$ = interval(1000).pipe(map(() => new Date()));
   }
 
@@ -38,7 +38,7 @@ export class TimeService {
   }
 
 
-  getTimes() {
+  getTimes(): Observable<Timesheet> {
     let url = this.urlApi + 'Timesheet';
     var header = {
       headers: new HttpHeaders()
@@ -46,13 +46,11 @@ export class TimeService {
         .set('Authorization', `Bearer ${this.accessToken}`),
     };
 
-    return this.http.get(url, header).pipe(
+    return this.http.get<Timesheet>(url, header).pipe(
       map((response) => {
-        // Transformar a resposta em um formato específico, se necessário
         return response;
       }),
       catchError((error) => {
-        // Tratar o erro da API
         console.error(error);
         return throwError(() => new Error('Erro ao buscar os times.'));
       })

@@ -2,9 +2,13 @@ import { NewTime } from './../../models/NewTime';
 import { CommonModule } from '@angular/common';
 import { TimeService } from './../../services/time.service';
 import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, LoadingController } from '@ionic/angular';
 import { User } from 'src/app/models/User.model';
 import { FormsModule } from '@angular/forms';
+import localePT from '@angular/common/locales/pt';
+import * as moment from 'moment';
+import { Timesheet } from 'src/app/models/Timesheet';
+
 
 @Component({
   selector: 'app-home',
@@ -19,16 +23,16 @@ export class HomePage {
   cheguei!: string;
   usuario = 'jailton.mendes@thera.com.br';
   dateTime!: Date;
+  timeSheet!: Timesheet;
   newTime!: NewTime;
-  dataInicio!: string;
-  horaInicio!: string;
-  horaAlmoco!: string;
-  horaVoltaAlmoco!: string;
-  horaFim!: string;
-  tempoFinal!: string;
-  tempoFinall!: string;
+  startDate!: string;
+  startTime!: string;
+  startTimeLaunch!: string;
+  backTimeLaunch!: string;
+  endtime!: string;
+  finalTime!: string;
   time!: string;
-  tempo = null;
+  tempo = '00:00:00';
   timer: any;
   stopTimer!: boolean;
   dataFormatada = new Date().toISOString();
@@ -43,6 +47,7 @@ export class HomePage {
   constructor(
 
     private timeService: TimeService,
+    private loadingCtrl: LoadingController,
 
   ) {
 
@@ -53,18 +58,20 @@ export class HomePage {
       this.horaAtual = dateTime.toLocaleTimeString('pt-br', {
         timeZone: 'America/Sao_Paulo',
       });
-      this.dataFormatada = dateTime.toISOString();
+      this.dataFormatada = moment(dateTime, 'America/Sao_Paulo').format('YYYY-MM-DD[T]HH:mm:ss.SSSSSS[Z]');
+
     });
   }
 
 
-  getTimes() {
-    const token = localStorage.getItem('accessToken');
-
-    this.timeService.getTimes().subscribe({
+  async getTimes() {
+    this.showLoading();
+    await this.timeService.getTimes().subscribe({
       next: (data) => {
         // lógica aqui
-        console.log('Data: ', data);
+        this.timeSheet = data;
+        console.log('Data: ', this.timeSheet.items);
+        this.loadingCtrl.dismiss();
       },
       error: (error) => {
         // lidar com erros aqui
@@ -76,70 +83,67 @@ export class HomePage {
     });
   }
 
-  startTime() {
-
+  start() {
+    console.log(this.dataFormatada)
     this.timeService.newTime(this.dataFormatada).subscribe({
       next: (data) => {
         this.newTime = {
           id: data.id
         }
-        console.log('res', data);
-        console.log('this.newTime: ', this.newTime)
       },
       error: (error) => {
         console.log('res', error);
       }
     })
 
-    this.dataInicio = this.dateTime.toLocaleDateString('pt-br');
-    this.horaInicio = this.horaAtual;
+    this.startDate = this.dateTime.toLocaleDateString('pt-br');
+    this.startTime = this.horaAtual;
     this.cronometro();
   }
 
 
-  startAlmoco() {
-
-    console.log(this.newTime.id)
-    console.log(this.dataFormatada)
+  startLunch() {
     this.timeService.updataTime(this.newTime.id!, this.dataFormatada).subscribe({
       next: (data) => {
-        console.log('update', data);
+        console.log('Hora registrada!');
       },
       error: (error) => {
         console.log('error: ', error);
       }
     })
 
-    this.horaAlmoco = this.horaAtual;
+    this.startTimeLaunch = this.horaAtual;
     clearInterval(this.timer);
   }
 
 
-  backAlmoco() {
+  endLunch() {
     this.timeService.updataTime(this.newTime.id!, '' ,this.dataFormatada).subscribe({
       next: (dados) => {
-        console.log(dados)
+        console.log('Hora registrada!');
       },
       error: (error) => {
         console.log(error)
       }
     })
-    this.horaVoltaAlmoco = this.horaAtual;
+    this.backTimeLaunch = this.horaAtual;
     this.cronometro();
   }
 
-  hourEnd() {
+  end() {
     this.timeService.updataTime(this.newTime.id!, '', '', this.dataFormatada).subscribe({
       next: (dados) => {
-        console.log(dados)
+        console.log('Hora registrada!');
       },
       error: (error) => {
         console.log(error);
       }
     })
-    this.horaFim = this.horaAtual;
-    this.tempoFinal = this.tempoFinall;
+    this.endtime = this.horaAtual;
+    this.finalTime = this.tempo;
     clearInterval(this.timer);
+    this.clearInputs();
+    this.getTimes();
   }
 
   cronometro() {
@@ -159,14 +163,31 @@ export class HomePage {
         this.hh++
       }
 
-      // adicionando zero na frente da this.horaAlmoco, caso hora seja menor que 10
       tempoFormatado = (this.hh < 10 ? '0' + this.hh : this.hh) + ':' + (this.mm < 10 ? '0' + this.mm : this.mm) + ':' + (this.ss < 10 ? '0' + this.ss : this.ss);
 
 
-      this.tempoFinall = tempoFormatado;
+      this.tempo = tempoFormatado;
 
     }, 1000)
 
+  }
 
+  clearInputs() {
+    this.startDate = '';
+    this.startTime = '';
+    this.startTimeLaunch = '';
+    this.backTimeLaunch = '';
+    this.endtime = '';
+    this.finalTime = '';
+  }
+
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'carregando dados...',
+      // duration: 3000,
+      spinner: 'circles',
+    });
+
+    loading.present();
   }
 }

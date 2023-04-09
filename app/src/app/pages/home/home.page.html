@@ -1,92 +1,129 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-row>
-      <ion-col>
-        <img
-          src="../../../assets/LogoThera.svg"
-          alt="Logo Thera"
-          srcset=""
-          class="logo"
-        />
+    <ion-row class="menu">
+      <ion-col size="4">
+        <img src="../../../assets/LogoThera.svg" alt="Logo Thera" srcset="" class="logo" />
       </ion-col>
-      <ion-col class="olaNome">
-        <p>Olá, {{ userName }}!</p>
+
+      <ion-col size="6">
+        <p>Olá, <span>{{ userName }}!</span></p>
+      </ion-col>
+
+      <ion-col size="2" class="logout">
+        <ion-buttons>
+          <ion-button>
+            <img src="../../../assets/sair.svg" alt="Logo Thera" />
+          </ion-button>
+        </ion-buttons>
       </ion-col>
     </ion-row>
-
-    <ion-buttons slot="end">
-      <ion-button>
-        <img src="../../../assets/sair.svg" alt="Logo Thera" class="sair" />
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div id="container">
-    <ion-card class="card">
-      <div class="dateTime">
-        <h4>{{ dateTime | date: "dd/MM/yyyy HH:mm:ss" }}</h4>
-        <h5>{{ tempoFinall }}</h5>
-      </div>
 
-      <div class="acoes">
-        <ion-row>
-          <ion-col size="12">
-            <ion-button fill="clear" class="buttons" (click)="startTime()"
-              >CHEGUEI</ion-button
-            >
-            <ion-button fill="clear" class="buttons" (click)="startAlmoco()"
-              >FUI ALMOÇAR</ion-button
-            >
+  <div id="container">
+    <ion-row class="actions">
+      <ion-card>
+        <div class="dateTime">
+          <h4>{{ dateTime | date: "dd/MM/yyyy" }} <span>{{ dateTime | date: "HH:mm:ss" }}</span></h4>
+          <h5>Tempo {{ tempo }}</h5>
+        </div>
+
+        <div>
+          <ion-row>
+            <ion-col size="12">
+              <ion-button fill="clear" class="buttons" (click)="start()">CHEGUEI</ion-button>
+              <ion-button fill="clear" class="buttons" (click)="startLunch()">FUI ALMOÇAR</ion-button>
+            </ion-col>
+            <ion-col size="12">
+              <ion-button fill="clear" class="buttons btn" (click)="endLunch()">VOLTEI</ion-button>
+              <ion-button fill="clear" class="buttons btn" (click)="end()">FUI</ion-button>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-card>
+    </ion-row>
+
+    <ion-row class="infor">
+      <ion-card class="cardTime">
+        <ion-row class="infoTimeRegister">
+          <ion-col>
+            <p>DATA</p>
+            <ion-input readonly [(ngModel)]="startDate"></ion-input>
           </ion-col>
-          <ion-col size="12">
-            <ion-button fill="clear" class="buttons" (click)="backAlmoco()"
-              >VOLTEI</ion-button
-            >
-            <ion-button fill="clear" class="buttons" (click)="hourEnd()"
-              >FUI</ion-button
-            >
+          <ion-col>
+            <p>HORA INÍCIO</p>
+            <ion-input readonly [(ngModel)]="startTime"></ion-input>
           </ion-col>
         </ion-row>
+
+        <ion-row class="infoTimeRegister">
+          <ion-col>
+            <p>ALMOÇO INÍCIO</p>
+            <ion-input readonly [(ngModel)]="startTimeLaunch"></ion-input>
+          </ion-col>
+          <ion-col>
+            <p>ALMOÇO FIM</p>
+            <ion-input readonly [(ngModel)]="backTimeLaunch"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="infoTimeRegister">
+          <ion-col>
+            <p>HORA FIM</p>
+            <ion-input readonly [(ngModel)]="endtime"></ion-input>
+          </ion-col>
+          <ion-col>
+            <p>TEMPO</p>
+            <ion-input readonly [(ngModel)]="finalTime"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <div class="infoTimeRegister divider"></div>
+
+      </ion-card>
+
+      <div class="areatimeSheet" *ngIf="timeSheet">
+        <ion-card class="cardTime" *ngFor="let time of timeSheet.items">
+          <ion-row class="infoTimeRegister">
+            <ion-col >
+              <p>DATA</p>
+              <ion-input readonly><span>{{ time.start | date: 'dd/MM/yyyy' }}</span></ion-input>
+            </ion-col>
+            <ion-col>
+              <p>HORA INÍCIO</p>
+              <ion-input readonly><span>{{ time.start | date:'HH:mm':'UTC' }}</span></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="infoTimeRegister">
+            <ion-col>
+              <p>ALMOÇO INÍCIO</p>
+              <ion-input readonly><span>{{ time.startLunch | date:'HH:mm':'UTC' }}</span></ion-input>
+            </ion-col>
+            <ion-col>
+              <p>ALMOÇO FIM</p>
+              <ion-input readonly><span>{{ time.endLunch | date:'HH:mm':'UTC' }}</span></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="infoTimeRegister">
+            <ion-col>
+              <p>HORA FIM</p>
+              <ion-input readonly><span>{{ time.end | date:'HH:mm':'UTC' }}</span></ion-input>
+            </ion-col>
+            <ion-col>
+              <p>TEMPO</p>
+              <ion-input readonly><span></span></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <div class="divider"></div>
+
+        </ion-card>
       </div>
-    </ion-card>
-
-    <ion-card class="cardTime">
-      <ion-row class="infoTimeRegister">
-        <ion-col>
-          <p>DATA</p>
-          <ion-input [(ngModel)]="dataInicio"></ion-input>
-        </ion-col>
-        <ion-col>
-          <p>HORA INÍCIO</p>
-          <ion-input [(ngModel)]="horaInicio"></ion-input>
-        </ion-col>
-      </ion-row>
-
-      <ion-row class="infoTimeRegister">
-        <ion-col>
-          <p>ALMOÇO INÍCIO</p>
-          <ion-input [(ngModel)]="horaAlmoco"></ion-input>
-        </ion-col>
-        <ion-col>
-          <p>ALMOÇO FIM</p>
-          <ion-input [(ngModel)]="horaVoltaAlmoco"></ion-input>
-        </ion-col>
-      </ion-row>
-
-      <ion-row class="infoTimeRegister">
-        <ion-col>
-          <p>HORA FIM</p>
-          <ion-input [(ngModel)]="horaFim"></ion-input>
-        </ion-col>
-        <ion-col>
-          <p>TEMPO</p>
-          <ion-input [(ngModel)]="tempoFinal"></ion-input>
-        </ion-col>
-      </ion-row>
-
-      <div class="divider"></div>
-    </ion-card>
+    </ion-row>
   </div>
+
 </ion-content>
