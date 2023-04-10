@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+
 import { Login } from '../models/login.model';
 import { Observable, interval, catchError, map, tap, throwError } from 'rxjs';
 import { error } from 'console';
@@ -8,6 +8,7 @@ import { User } from '../models/User.model';
 import { LocalstorageService } from './localstorage.service';
 import { NewTime } from '../models/NewTime';
 import { Timesheet } from '../models/Timesheet';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root',
@@ -16,15 +17,13 @@ export class TimeService {
   urlApi = environment.apiUrl;
   accessToken = '';
 
-  dateTime$!: Observable<Date>;
 
   constructor(
     private http: HttpClient,
     private localStorage: LocalstorageService
 
   ) {
-    this.accessToken = this.localStorage.getLocalStorage('accessToken')!;
-    this.dateTime$ = interval(1000).pipe(map(() => new Date()));
+    this.accessToken = this.localStorage.getLocalStorage('token')!;
   }
 
   login(login: Login): Observable<User> {
@@ -38,12 +37,12 @@ export class TimeService {
   }
 
 
-  getTimes(): Observable<Timesheet> {
+  getTimes(token: string): Observable<Timesheet> {
     let url = this.urlApi + 'Timesheet';
     var header = {
       headers: new HttpHeaders()
         .set('Content-Type', `application/json`)
-        .set('Authorization', `Bearer ${this.accessToken}`),
+        .set('Authorization', `Bearer ${token}`),
     };
 
     return this.http.get<Timesheet>(url, header).pipe(

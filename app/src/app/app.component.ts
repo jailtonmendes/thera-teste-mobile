@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, isDevMode } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',

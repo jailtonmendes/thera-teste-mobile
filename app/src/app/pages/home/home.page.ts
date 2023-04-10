@@ -1,13 +1,13 @@
 import { NewTime } from './../../models/NewTime';
 import { CommonModule } from '@angular/common';
 import { TimeService } from './../../services/time.service';
-import { Component } from '@angular/core';
-import { IonicModule, LoadingController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { IonicModule, LoadingController, NavController } from '@ionic/angular';
 import { User } from 'src/app/models/User.model';
 import { FormsModule } from '@angular/forms';
-import localePT from '@angular/common/locales/pt';
 import * as moment from 'moment';
 import { Timesheet } from 'src/app/models/Timesheet';
+import { Observable, interval, map } from 'rxjs';
 
 
 @Component({
@@ -17,7 +17,8 @@ import { Timesheet } from 'src/app/models/Timesheet';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
 })
-export class HomePage {
+export class HomePage implements OnInit{
+  accessToken = localStorage.getItem('token');
   user!: User;
   userName = localStorage.getItem('userName');
   cheguei!: string;
@@ -40,6 +41,10 @@ export class HomePage {
     timeZone: 'America/Sao_Paulo',
   });
 
+  dateTime$!: Observable<Date>;
+
+
+
   ss = 0;
   mm = 0;
   hh = 0;
@@ -47,13 +52,16 @@ export class HomePage {
   constructor(
 
     private timeService: TimeService,
-    private loadingCtrl: LoadingController,
+    public loadingController: LoadingController
 
   ) {
+    this.dateTime$ = interval(1000).pipe(map(() => new Date()));
+  }
 
+  ngOnInit(): void {
     this.getTimes();
 
-    this.timeService.dateTime$.subscribe((dateTime) => {
+    this.dateTime$.subscribe((dateTime) => {
       this.dateTime = dateTime;
       this.horaAtual = dateTime.toLocaleTimeString('pt-br', {
         timeZone: 'America/Sao_Paulo',
@@ -64,32 +72,35 @@ export class HomePage {
   }
 
 
+
+
+
   async getTimes() {
-    this.showLoading();
-    await this.timeService.getTimes().subscribe({
+    this.presentLoading();
+    await this.timeService.getTimes(this.accessToken!).subscribe({
       next: (data) => {
         // lógica aqui
         this.timeSheet = data;
-        console.log('Data: ', this.timeSheet.items);
-        this.loadingCtrl.dismiss();
+          this.dismissLoading();
+
       },
       error: (error) => {
         // lidar com erros aqui
-        console.log('Error: ', error);
-      },
-      complete: () => {
-        // lidar com a conclusão aqui
+        console.log('Error: ', error)
+          this.dismissLoading();
       },
     });
   }
 
   start() {
     console.log(this.dataFormatada)
-    this.timeService.newTime(this.dataFormatada).subscribe({
+    let date = this.dataFormatada;
+    this.timeService.newTime(date).subscribe({
       next: (data) => {
         this.newTime = {
           id: data.id
         }
+        console.log('res: ', data)
       },
       error: (error) => {
         console.log('res', error);
@@ -142,9 +153,10 @@ export class HomePage {
     this.endtime = this.horaAtual;
     this.finalTime = this.tempo;
     clearInterval(this.timer);
-    this.clearInputs();
+    // this.clearInputs();
     this.getTimes();
   }
+
 
   cronometro() {
 
@@ -172,6 +184,11 @@ export class HomePage {
 
   }
 
+  home() {
+    location.reload();
+  }
+
+
   clearInputs() {
     this.startDate = '';
     this.startTime = '';
@@ -181,13 +198,16 @@ export class HomePage {
     this.finalTime = '';
   }
 
-  async showLoading() {
-    const loading = await this.loadingCtrl.create({
-      message: 'carregando dados...',
-      // duration: 3000,
-      spinner: 'circles',
-    });
 
-    loading.present();
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Carregando...',
+      duration: 2000
+    });
+    await loading.present();
+  }
+
+  async dismissLoading() {
+    await this.loadingController.dismiss();
   }
 }

@@ -9,12 +9,17 @@ import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 
 
 if (environment.production) {
   enableProdMode();
 }
+
+// platformBrowserDynamic().bootstrapModule(AppComponent)
+//   .catch(err => console.log(err));
+
 
 bootstrapApplication(AppComponent, {
 

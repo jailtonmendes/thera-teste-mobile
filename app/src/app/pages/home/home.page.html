@@ -2,7 +2,7 @@
   <ion-toolbar color="primary">
     <ion-row class="menu">
       <ion-col size="4">
-        <img src="../../../assets/LogoThera.svg" alt="Logo Thera" srcset="" class="logo" />
+        <img src="assets/LogoThera.svg" alt="Logo Thera" srcset="" class="logo" />
       </ion-col>
 
       <ion-col size="6">
@@ -12,7 +12,7 @@
       <ion-col size="2" class="logout">
         <ion-buttons>
           <ion-button>
-            <img src="../../../assets/sair.svg" alt="Logo Thera" />
+            <img src="assets/sair.svg" alt="Logo Thera" />
           </ion-button>
         </ion-buttons>
       </ion-col>
@@ -46,84 +46,130 @@
     </ion-row>
 
     <ion-row class="infor">
-      <ion-card class="cardTime">
-        <ion-row class="infoTimeRegister">
-          <ion-col>
-            <p>DATA</p>
-            <ion-input readonly [(ngModel)]="startDate"></ion-input>
-          </ion-col>
-          <ion-col>
-            <p>HORA INÍCIO</p>
-            <ion-input readonly [(ngModel)]="startTime"></ion-input>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="infoTimeRegister">
-          <ion-col>
-            <p>ALMOÇO INÍCIO</p>
-            <ion-input readonly [(ngModel)]="startTimeLaunch"></ion-input>
-          </ion-col>
-          <ion-col>
-            <p>ALMOÇO FIM</p>
-            <ion-input readonly [(ngModel)]="backTimeLaunch"></ion-input>
-          </ion-col>
-        </ion-row>
-
-        <ion-row class="infoTimeRegister">
-          <ion-col>
-            <p>HORA FIM</p>
-            <ion-input readonly [(ngModel)]="endtime"></ion-input>
-          </ion-col>
-          <ion-col>
-            <p>TEMPO</p>
-            <ion-input readonly [(ngModel)]="finalTime"></ion-input>
-          </ion-col>
-        </ion-row>
-
-        <div class="infoTimeRegister divider"></div>
-
-      </ion-card>
-
-      <div class="areatimeSheet" *ngIf="timeSheet">
-        <ion-card class="cardTime" *ngFor="let time of timeSheet.items">
+      <ion-col size="12">
+        <ion-card class="cardTime">
           <ion-row class="infoTimeRegister">
-            <ion-col >
+            <ion-col>
               <p>DATA</p>
-              <ion-input readonly><span>{{ time.start | date: 'dd/MM/yyyy' }}</span></ion-input>
+              <input readonly [(ngModel)]="startDate">
             </ion-col>
             <ion-col>
               <p>HORA INÍCIO</p>
-              <ion-input readonly><span>{{ time.start | date:'HH:mm':'UTC' }}</span></ion-input>
+              <input readonly [(ngModel)]="startTime">
             </ion-col>
           </ion-row>
 
           <ion-row class="infoTimeRegister">
             <ion-col>
               <p>ALMOÇO INÍCIO</p>
-              <ion-input readonly><span>{{ time.startLunch | date:'HH:mm':'UTC' }}</span></ion-input>
+              <input readonly [(ngModel)]="startTimeLaunch">
             </ion-col>
             <ion-col>
               <p>ALMOÇO FIM</p>
-              <ion-input readonly><span>{{ time.endLunch | date:'HH:mm':'UTC' }}</span></ion-input>
+              <input readonly [(ngModel)]="backTimeLaunch">
             </ion-col>
           </ion-row>
 
           <ion-row class="infoTimeRegister">
             <ion-col>
               <p>HORA FIM</p>
-              <ion-input readonly><span>{{ time.end | date:'HH:mm':'UTC' }}</span></ion-input>
+              <input readonly [(ngModel)]="endtime">
             </ion-col>
             <ion-col>
               <p>TEMPO</p>
-              <ion-input readonly><span></span></ion-input>
+              <input readonly [(ngModel)]="finalTime">
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="infoTimeRegister">
+            <div class="divider"></div>
+          </ion-row>
+
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" class="areatimeSheet" *ngIf="timeSheet">
+        <ion-card class="cardTime" *ngFor="let time of timeSheet.items">
+          <ion-row class="infoTimeRegister">
+            <ion-col >
+              <p>DATA</p>
+              <p class="listTimes" ><span>{{ time.start | date: 'dd/MM/yyyy' }}</span></p>
+            </ion-col>
+            <ion-col>
+              <p>HORA INÍCIO</p>
+              <p class="listTimes"><span>{{ time.start | date:'HH:mm:ss':'UTC' }}</span></p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="infoTimeRegister">
+            <ion-col>
+              <p>ALMOÇO INÍCIO</p>
+              <p class="listTimes"><span>{{ time.startLunch | date:'HH:mm:ss':'UTC' }}</span></p>
+            </ion-col>
+            <ion-col>
+              <p>ALMOÇO FIM</p>
+              <p class="listTimes"><span>{{ time.endLunch | date:'HH:mm:ss':'UTC' }}</span></p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="infoTimeRegister">
+            <ion-col>
+              <p>HORA FIM</p>
+              <p class="listTimes"><span>{{ time.end | date:'HH:mm:ss':'UTC' }}</span></p>
+            </ion-col>
+            <ion-col>
+              <p>TEMPO</p>
+              <p class="listTimes"><span></span></p>
             </ion-col>
           </ion-row>
 
           <div class="divider"></div>
 
         </ion-card>
-      </div>
+      </ion-col>
+
+
+      <!-- <div class="areatimeSheet" *ngIf="timeSheet">
+        <ion-card class="cardTime" *ngFor="let time of timeSheet.items">
+          <ion-row class="infoTimeRegister">
+            <ion-col >
+              <p>DATA</p>
+              <p class="listTimes" ><span>{{ time.start | date: 'dd/MM/yyyy' }}</span></p>
+            </ion-col>
+            <ion-col>
+              <p>HORA INÍCIO</p>
+              <p class="listTimes"><span>{{ time.start | date:'HH:mm:ss':'UTC' }}</span></p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="infoTimeRegister">
+            <ion-col>
+              <p>ALMOÇO INÍCIO</p>
+              <p class="listTimes"><span>{{ time.startLunch | date:'HH:mm:ss':'UTC' }}</span></p>
+            </ion-col>
+            <ion-col>
+              <p>ALMOÇO FIM</p>
+              <p class="listTimes"><span>{{ time.endLunch | date:'HH:mm:ss':'UTC' }}</span></p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="infoTimeRegister">
+            <ion-col>
+              <p>HORA FIM</p>
+              <p class="listTimes"><span>{{ time.end | date:'HH:mm:ss':'UTC' }}</span></p>
+            </ion-col>
+            <ion-col>
+              <p>TEMPO</p>
+              <p class="listTimes"><span></span></p>
+            </ion-col>
+          </ion-row>
+
+          <div class="divider"></div>
+
+        </ion-card>
+      </div> -->
     </ion-row>
+
   </div>
 
 </ion-content>

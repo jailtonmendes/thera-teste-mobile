@@ -27,7 +27,7 @@ export class LoginPage implements OnInit {
     private router: Router,
     private timeService: TimeService,
     private localStorage: LocalstorageService,
-    private loadingCtrl: LoadingController,
+    public loadingController: LoadingController
 
   ) { }
 
@@ -44,31 +44,28 @@ export class LoginPage implements OnInit {
 
     if(this.usuario != '' && this.senha != '') {
 
-      this.showLoading();
+      this.presentLoading();
       this.timeService.login(this.loginModel)
         .subscribe({
           next: response => {
             // Tratar a resposta da API aqui
-            console.log(response);
             this.user = response;
             localStorage.setItem('token', response.accessToken)
-            this.localStorage.setLocalStorage('accessToken', this.user.accessToken)
             this.localStorage.setLocalStorage('userName', this.user.name)
+            this.dismissLoading;
             this.router.navigate(['/home'])
-            this.loadingCtrl.dismiss();
+
           },
           error: err => {
+            this.dismissLoading();
             // Tratar o erro da API aqui
             console.error(err);
-            this.loadingCtrl.dismiss();
             if (err.status === 401) {
               // Redirecionar para a página de login novamente
               console.log('erro: ', err)
-              this.loadingCtrl.dismiss();
             } else {
               // Exibir uma mensagem de erro genérica para o usuário
               alert('Dados incorretos!')
-              this.loadingCtrl.dismiss();
             }
           }
         });
@@ -80,12 +77,16 @@ export class LoginPage implements OnInit {
   }
 
 
-  async showLoading() {
-    const loading = await this.loadingCtrl.create({
-      spinner: 'circles',
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Carregando...',
+      duration: 2000
     });
+    await loading.present();
+  }
 
-    loading.present();
+  async dismissLoading() {
+    await this.loadingController.dismiss();
   }
 
 }

@@ -3,7 +3,7 @@
     <ion-col class="areaLogin">
       <ion-row>
         <ion-col size="12" class="areaLogo">
-          <img src="../../../assets/LogoThera.svg" alt="Logo Thera" srcset="" />
+          <img src="assets/LogoThera.svg" alt="Logo Thera" srcset="" />
         </ion-col>
       </ion-row>
 
@@ -11,16 +11,16 @@
         <ion-col class="inputs">
           <ion-row class="entradaDados">
             <button>
-              <img src="../../../assets/usuario.svg" alt="" class="imgUser" />
+              <img src="assets/usuario.svg" alt="" class="imgUser" />
             </button>
-            <ion-input placeholder="Usuário" class="inputUser" [(ngModel)]="usuario"></ion-input>
+            <input placeholder="Usuário" class="inputUser" [(ngModel)]="usuario">
           </ion-row>
 
           <ion-row class="entradaDados">
             <button>
-              <img src="../../../assets/senha.svg" alt="" srcset="" />
+              <img src="assets/senha.svg" alt="" srcset="" />
             </button>
-            <ion-input placeholder="Senha" class="inputPassword" [(ngModel)]="senha"></ion-input>
+            <input placeholder="Senha" type="password" class="inputPassword" [(ngModel)]="senha">
           </ion-row>
 
           <ion-button color="warning" class="login" (click)="login()">LOGIN</ion-button>
